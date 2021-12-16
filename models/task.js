@@ -11,13 +11,32 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Task.belongsTo(models.User, {
+        foreignKey: "fk_user",
+      });
     }
   };
   Task.init({
-    summary: DataTypes.STRING,
-    description: DataTypes.STRING,
-    completed: DataTypes.BOOLEAN,
-    fk_user: DataTypes.INTEGER
+    summary: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    completed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 0,
+      validate: { isInt: true },
+    },
+    fk_user: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: { isInt: true },
+      onUpdate: "CASCADE",
+      onDelete: "CASCADE",
+    },
   }, {
     sequelize,
     modelName: 'Task',
