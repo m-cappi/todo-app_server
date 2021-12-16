@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Task extends Model {
     /**
@@ -12,34 +10,37 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Task.belongsTo(models.User, {
-        foreignKey: "fk_user",
+        foreignKey: 'fk_user'
       });
     }
-  };
-  Task.init({
-    summary: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
+  }
+  Task.init(
+    {
+      summary: {
+        type: DataTypes.STRING(50),
+        allowNull: false
+      },
+      description: {
+        type: DataTypes.STRING(255),
+        allowNull: true
+      },
+      completed: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: 0,
+        validate: { isInt: true }
+      },
+      fk_user: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: { isInt: true },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      }
     },
-    description: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-    },
-    completed: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: 0,
-      validate: { isInt: true },
-    },
-    fk_user: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: { isInt: true },
-      onUpdate: "CASCADE",
-      onDelete: "CASCADE",
-    },
-  }, {
-    sequelize,
-    modelName: 'Task',
-  });
+    {
+      sequelize,
+      modelName: 'Task'
+    }
+  );
   return Task;
 };
