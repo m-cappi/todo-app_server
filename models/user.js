@@ -2,6 +2,8 @@
 const {
   Model
 } = require('sequelize');
+const { HashSync } = require('../helpers/auth/hash');
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -14,11 +16,31 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   User.init({
-    email: DataTypes.STRING,
-    password: DataTypes.STRING
+    email: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      unique: true,
+      validate: { isEmail: true },
+  },
+    password: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+  },
   }, {
     sequelize,
     modelName: 'User',
+    hooks: {
+      beforeCreate: async (user) => {
+          if (user.password) {
+            user.password = await HashSync(user.password);
+          }
+      },
+      beforeUpdate: async (user) => {
+          if (user.password) {
+              user.password = await HashSync(user.password);
+          }
+      },
+  },
   });
   return User;
 };
