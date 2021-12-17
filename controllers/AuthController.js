@@ -14,7 +14,7 @@ const Login = async (req, res, next) => {
 
     if (isMatch) {
       const token = generateToken(user);
-      res.status(200).json(token);
+      res.status(200).json({ token, userId: user.userId, email: user.email });
     } else {
       res.status(401);
       throw new Error('Invalid credentials!');
@@ -47,7 +47,7 @@ const Register = async (req, res, next) => {
 
     const token = generateToken(newUser);
 
-    res.status(201).json(token);
+    res.status(201).json({ token, userId: newUser.userId, email: newUser.email });
   } catch (err) {
     next(err);
   }
