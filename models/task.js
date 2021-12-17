@@ -10,12 +10,19 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Task.belongsTo(models.User, {
-        foreignKey: 'fk_user'
+        foreignKey: 'userId'
       });
     }
   }
   Task.init(
     {
+      taskId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true,
+        validate: { isInt: true }
+      },
       summary: {
         type: DataTypes.STRING(50),
         allowNull: false
@@ -29,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 0,
         validate: { isInt: true }
       },
-      fk_user: {
+      userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: { isInt: true },
