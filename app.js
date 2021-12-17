@@ -7,8 +7,8 @@ var cors = require('cors');
 const { notFound, errorHandler } = require('./middleware/ErrorMiddleware');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
+const tasksRouter = require('./routes/tasks');
 
 var app = express();
 
@@ -20,8 +20,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/auth', authRouter);
+app.use('/tasks', tasksRouter);
 
 app.use(notFound);
 app.use(errorHandler);
