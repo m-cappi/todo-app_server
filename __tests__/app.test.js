@@ -97,4 +97,14 @@ describe('Tasks Endpoints', () => {
     expect(res.body).toHaveProperty('summary', testTask.summary);
     expect(res.body).toHaveProperty('completed', true);
   });
+
+  it('DELETE /tasks/:taskId Delete the testTask', async () => {
+    // demoUser.token relies on 'POST /auth/login User login' test
+    // testTask.taskId relies on 'POST /tasks Add new task' test
+    const res = await requestWithSupertest
+      .delete(`/tasks/${testTask.taskId}`)
+      .set('Authorization', demoUser.token)
+
+    expect(res.status).toEqual(204);
+  });
 });
