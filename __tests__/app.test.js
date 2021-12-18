@@ -42,3 +42,28 @@ describe('Auth Endpoints', () => {
     expect(res.body).toHaveProperty('userId');
   });
 });
+
+describe('Tasks Endpoints', () => {
+  const demoUser = { email: 'demo@mail.com', password: 'demo123' };
+
+  it('POST /auth/login User login', async () => {
+    const res = await requestWithSupertest.post('/auth/login').send(demoUser);
+    demoUser.token = res.body.token;
+
+    expect(res.status).toEqual(200);
+    expect(res.type).toEqual(expect.stringContaining('json'));
+    expect(res.body).toHaveProperty('token');
+    expect(res.body).toHaveProperty('email', demoUser.email);
+    expect(res.body).toHaveProperty('userId');
+  });
+
+  it('GET /tasks Tasks list', async () => {
+    const res = await requestWithSupertest
+      .get('/tasks')
+      .set('Authorization', demoUser.token);
+
+    expect(res.status).toEqual(200);
+    expect(res.body[0]).toHaveProperty('taskId');
+    expect(res.body[0]).toHaveProperty('summary', 'Demo Task 01');
+  });
+});
