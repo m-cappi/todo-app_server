@@ -2,7 +2,8 @@ const {
   findUserTasks,
   createNewTask,
   updateTaskByPk,
-  findTaskByPk
+  findTaskByPk,
+  deleteTaskByPk
 } = require('../services/TaskServices');
 
 const tasksList = async (req, res, next) => {
@@ -67,9 +68,19 @@ const updateTask = async (req, res, next) => {
   }
 };
 
-const deleteTask = (req, res, next) => {
+const deleteTask = async (req, res, next) => {
   try {
-    console.log('pending');
+    const { taskId } = req.params;
+    const { userId } = req.user;
+
+    const isDeleted = await deleteTaskByPk(taskId, userId);
+
+    if (!isDeleted) {
+      res.status(403);
+      throw new Error('taskId or userId do not match');
+    }
+
+    res.sendStatus(204);
   } catch (err) {
     next(err);
   }

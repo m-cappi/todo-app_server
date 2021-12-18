@@ -35,9 +35,13 @@ const updateTaskByPk = async ({ taskId, userId, payload }) =>
 const findTaskByPk = async (taskId) =>
   Task.findByPk(taskId, { attributes: { exclude: ['userId'] } });
 
+const deleteTaskByPk = async (taskId, userId) =>
+  Task.destroy({ where: { taskId, userId } });
+
 module.exports = {
   findUserTasks,
   createNewTask,
   updateTaskByPk,
-  findTaskByPk
+  findTaskByPk,
+  deleteTaskByPk
 };
