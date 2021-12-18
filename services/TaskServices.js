@@ -5,14 +5,7 @@ const { Task } = db.sequelize.models;
 
 const findUserTasks = async (userId) =>
   Task.findAll({
-    attributes: [
-      'taskId',
-      'summary',
-      'description',
-      'completed',
-      'createdAt',
-      'updatedAt'
-    ],
+    attributes: { exclude: ['userId'] },
     where: {
       userId
     },
@@ -36,4 +29,15 @@ const createNewTask = async ({ summary, description, userId }) =>
     }
   );
 
-module.exports = { findUserTasks, createNewTask };
+const updateTaskByPk = async ({ taskId, userId, payload }) =>
+  Task.update(payload, { where: { taskId, userId }, validation: true });
+
+const findTaskByPk = async (taskId) =>
+  Task.findByPk(taskId, { attributes: { exclude: ['userId'] } });
+
+module.exports = {
+  findUserTasks,
+  createNewTask,
+  updateTaskByPk,
+  findTaskByPk
+};

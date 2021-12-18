@@ -1,4 +1,9 @@
-const { findUserTasks, createNewTask } = require('../services/TaskServices');
+const {
+  findUserTasks,
+  createNewTask,
+  updateTaskByPk,
+  findTaskByPk
+} = require('../services/TaskServices');
 
 const tasksList = async (req, res, next) => {
   try {
@@ -36,9 +41,27 @@ const addTask = async (req, res, next) => {
   }
 };
 
-const updateTask = (req, res, next) => {
+const updateTask = async (req, res, next) => {
   try {
-    console.log('pending');
+    const { taskId } = req.params;
+    const { summary, description, completed } = req.body;
+    const { userId } = req.user;
+
+    if (!summary && !description && completed === undefined) {
+      res.status(400);
+      throw new Error('Nothing to update');
+    }
+
+    const payload = {};
+    if (summary) payload.summary = summary;
+    if (description) payload.description = description;
+    if (completed !== undefined) payload.completed = completed;
+
+    await updateTaskByPk({ taskId, userId, payload });
+
+    const updatedTask = await findTaskByPk(taskId);
+
+    res.status(200).json(updatedTask);
   } catch (err) {
     next(err);
   }
