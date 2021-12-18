@@ -1,7 +1,7 @@
 const express = require('express');
 const {
   tasksList,
-  newTask,
+  addTask,
   updateTask,
   deleteTask
 } = require('../controllers/TaskController');
@@ -15,7 +15,7 @@ router.route('/').get(isAuthenticated, tasksList);
 
 // @DESC Add a new task
 // @ROUTE /tasks
-router.route('/').post(isAuthenticated, newTask);
+router.route('/').post(isAuthenticated, addTask);
 
 // @DESC Update a task
 // @ROUTE /tasks/:taskId

@@ -22,4 +22,18 @@ const findUserTasks = async (userId) =>
     ]
   });
 
-module.exports = { findUserTasks };
+const createNewTask = async ({ summary, description, userId }) =>
+  Task.create(
+    {
+      summary,
+      description,
+      userId,
+      completed: 0
+    },
+    {
+      validation: true,
+      fields: ['summary', 'description', 'userId', 'completed']
+    }
+  );
+
+module.exports = { findUserTasks, createNewTask };

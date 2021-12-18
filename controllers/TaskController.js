@@ -1,4 +1,4 @@
-const { findUserTasks } = require('../services/TaskServices');
+const { findUserTasks, createNewTask } = require('../services/TaskServices');
 
 const tasksList = async (req, res, next) => {
   try {
@@ -18,9 +18,19 @@ const tasksList = async (req, res, next) => {
   }
 };
 
-const newTask = (req, res, next) => {
+const addTask = async (req, res, next) => {
   try {
-    console.log('pending');
+    const { summary, description } = req.body;
+    const { userId } = req.user;
+
+    if (!summary) {
+      res.status(400);
+      throw new Error('A new Task must have a summary');
+    }
+
+    const newTask = await createNewTask({ summary, description, userId });
+
+    res.status(201).json(newTask);
   } catch (err) {
     next(err);
   }
@@ -44,7 +54,7 @@ const deleteTask = (req, res, next) => {
 
 module.exports = {
   tasksList,
-  newTask,
+  addTask,
   updateTask,
   deleteTask
 };

@@ -33,8 +33,15 @@ module.exports = (sequelize, DataTypes) => {
       },
       completed: {
         type: DataTypes.BOOLEAN,
+        // defaultValue = false, so I'm not really setting a default
         defaultValue: 0,
-        validate: { isInt: true }
+        validate: {
+          isBoolean(completed) {
+            if (typeof completed !== 'boolean') {
+              throw new Error('Completed must be a boolean');
+            }
+          }
+        }
       },
       userId: {
         type: DataTypes.INTEGER,
