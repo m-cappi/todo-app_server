@@ -45,6 +45,7 @@ describe('Auth Endpoints', () => {
 
 describe('Tasks Endpoints', () => {
   const demoUser = { email: 'demo@mail.com', password: 'demo123' };
+  const testTask = { summary: 'Test Task 01' };
 
   it('POST /auth/login User login', async () => {
     const res = await requestWithSupertest.post('/auth/login').send(demoUser);
@@ -65,5 +66,16 @@ describe('Tasks Endpoints', () => {
     expect(res.status).toEqual(200);
     expect(res.body[0]).toHaveProperty('taskId');
     expect(res.body[0]).toHaveProperty('summary', 'Demo Task 01');
+  });
+
+  it('POST /tasks Add new task', async () => {
+    const res = await requestWithSupertest
+      .post('/tasks')
+      .set('Authorization', demoUser.token)
+      .send(testTask);
+
+    expect(res.status).toEqual(201);
+    expect(res.body).toHaveProperty('taskId');
+    expect(res.body).toHaveProperty('summary', testTask.summary);
   });
 });

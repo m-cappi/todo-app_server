@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "test": "cross-env NODE_ENV=test jest --testTimeout=10000 --detectOpenHandles",
-    "pretest": "cross-env NODE_ENV=test && yarn migrate:reset",
+    "pretest": "cross-env-shell NODE_ENV=test \"yarn migrate:reset\"",
     "migrate:reset": "yarn sequelize-cli db:migrate:undo:all && yarn migrate",
     "migrate": "yarn sequelize-cli db:migrate && yarn sequelize-cli db:seed:all"
   },
