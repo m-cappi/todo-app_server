@@ -44,6 +44,7 @@ describe('Auth Endpoints', () => {
 });
 
 describe('Tasks Endpoints', () => {
+  // demoUser existance relies on sequelize migration seeds
   const demoUser = { email: 'demo@mail.com', password: 'demo123' };
   const testTask = { summary: 'Test Task 01' };
 
@@ -59,6 +60,7 @@ describe('Tasks Endpoints', () => {
   });
 
   it('GET /tasks Tasks list', async () => {
+    // demoUser.token relies on 'POST /auth/login User login' test
     const res = await requestWithSupertest
       .get('/tasks')
       .set('Authorization', demoUser.token);
@@ -69,13 +71,30 @@ describe('Tasks Endpoints', () => {
   });
 
   it('POST /tasks Add new task', async () => {
+    // demoUser.token relies on 'POST /auth/login User login' test
     const res = await requestWithSupertest
       .post('/tasks')
       .set('Authorization', demoUser.token)
       .send(testTask);
 
+    testTask.taskId = res.body.taskId;
+
     expect(res.status).toEqual(201);
     expect(res.body).toHaveProperty('taskId');
     expect(res.body).toHaveProperty('summary', testTask.summary);
+  });
+
+  it('PUT /tasks/:taskId Flag a task as completed', async () => {
+    // demoUser.token relies on 'POST /auth/login User login' test
+    // testTask.taskId relies on 'POST /tasks Add new task' test
+    const res = await requestWithSupertest
+      .put(`/tasks/${testTask.taskId}`)
+      .set('Authorization', demoUser.token)
+      .send({ completed: true });
+
+    expect(res.status).toEqual(200);
+    expect(res.body).toHaveProperty('taskId');
+    expect(res.body).toHaveProperty('summary', testTask.summary);
+    expect(res.body).toHaveProperty('completed', true);
   });
 });
