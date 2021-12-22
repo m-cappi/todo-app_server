@@ -47,10 +47,22 @@ const Register = async (req, res, next) => {
 
     const token = generateToken(newUser);
 
-    res.status(201).json({ token, userId: newUser.userId, email: newUser.email });
+    res
+      .status(201)
+      .json({ token, userId: newUser.userId, email: newUser.email });
   } catch (err) {
     next(err);
   }
 };
 
-module.exports = { Login, Register };
+const Reauthenticate = (req, res) => {
+  const { userId, email } = req.user;
+  const token = req.headers.authorization;
+  res.status(200).json({ token, userId, email });
+};
+
+module.exports = {
+  Login,
+  Register,
+  Reauthenticate
+};

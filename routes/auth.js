@@ -1,5 +1,10 @@
 const express = require('express');
-const { Login, Register } = require('../controllers/AuthController');
+const {
+  Login,
+  Register,
+  Reauthenticate
+} = require('../controllers/AuthController');
+const { isAuthenticated } = require('../middleware/isAuthenticated');
 
 const router = express.Router();
 
@@ -12,5 +17,10 @@ router.route('/login').post(Login);
 // @ROUTE /auth/register
 // TODO: express.validation
 router.route('/register').post(Register);
+
+// @DESC register
+// @ROUTE /auth/register
+// TODO: express.validation
+router.route('/me').get(isAuthenticated, Reauthenticate);
 
 module.exports = router;
