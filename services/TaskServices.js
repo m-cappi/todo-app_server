@@ -10,6 +10,7 @@ const findUserTasks = async (userId) =>
       userId
     },
     order: [
+      ['completed', 'ASC'],
       ['updatedAt', 'DESC'],
       ['createdAt', 'DESC']
     ]
