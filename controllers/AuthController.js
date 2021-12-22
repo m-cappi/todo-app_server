@@ -1,14 +1,12 @@
 const { generateToken } = require('../helpers/auth/generateToken');
 const { CompareHash } = require('../helpers/auth/hash');
-const db = require('../models/index');
-
-const { User } = db.sequelize.models;
+const { findUserByEmail, createUser } = require('../services/AuthServices');
 
 const Login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ where: { email } });
+    const user = await findUserByEmail(email);
 
     const isMatch = user && (await CompareHash(password, user.password));
 
@@ -28,22 +26,13 @@ const Register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const userExists = await User.findOne({ where: { email } });
+    const userExists = await await findUserByEmail(email);
     if (userExists) {
       res.status(409);
       throw new Error('This email is already registered!');
     }
 
-    const newUser = await User.create(
-      {
-        email,
-        password
-      },
-      {
-        validation: true,
-        fields: ['email', 'password']
-      }
-    );
+    const newUser = await createUser({ email, password });
 
     const token = generateToken(newUser);
 
